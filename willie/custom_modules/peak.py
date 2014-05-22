@@ -19,7 +19,8 @@ def peak(bot, trigger):
     if (channels is None):
         return
     channel = channels.group(1)
-    pop = len(bot.privileges[channel])
+    users = bot.privileges[channel]
+    pop = len(users)
     p = open(dbfile, 'r')
     current = p.read()
     peak = int(current)
@@ -37,3 +38,8 @@ def peakusers(bot, trigger):
     f = open(dbfile, 'r')
     count = f.read()
     bot.reply("The most meatbags I've seen were %s here, give or take a few superior beings like me." % count)
+
+#@module.commands('usercount')
+#@module.example('.usercount')
+#def usercount(bot, trigger):
+#    bot.reply(db.users())
