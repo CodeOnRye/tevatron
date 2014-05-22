@@ -1,8 +1,9 @@
 from willie import *
 from collections import Counter
 import re
+import os
 
-dbfile = '/home/tevatron/.willie/modules/peak.db'
+dbfile = os.path.dirname(os.path.realpath(__file__)) + '/peak.db'
 
 def timestamp():
     lt = time.localtime(time.time())
@@ -30,3 +31,9 @@ def peak(bot, trigger):
         f.write(pop)
         f.close()
 
+@module.commands('peakusers')
+@module.example('.peakusers')
+def peakusers(bot, trigger):
+    f = open(dbfile, 'r')
+    count = f.read()
+    bot.reply("The most meatbags I've seen were %s here, give or take a few superior beings like me." % count)
