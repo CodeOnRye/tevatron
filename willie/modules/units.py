@@ -1,4 +1,4 @@
-#coding: utf8
+# coding=utf8
 """
 units.py - Unit conversion module for Willie
 Copyright © 2013, Elad Alfassa, <elad@fedoraproject.org>
@@ -98,7 +98,8 @@ def distance(bot, trigger):
 
     if meter >= 1000:
         metric_part = '{:.2f}km'.format(meter / 1000)
-    #TODO, Maybe: elif meter < 0.01, display in millimeters?
+    elif meter < 0.01:
+        metric_part = '{:.2f}mm'.format(meter * 1000)
     elif meter < 1:
         metric_part = '{:.2f}cm'.format(meter * 100)
     else:
@@ -149,7 +150,7 @@ def mass(bot, trigger):
     elif unit in ("kilogram", "kilograms", "kilogramme", "kilogrammes", "kg"):
         metric = numeric * 1000
     elif unit in ("lb", "lbm", "pound", "pounds"):
-        metric = numeric * 453.6
+        metric = numeric * 453.59237
     elif unit in ("oz", "ounce"):
         metric = numeric * 28.35
 
@@ -158,12 +159,14 @@ def mass(bot, trigger):
     else:
         metric_part = '{:.2f}g'.format(metric)
 
-    ounce = metric * .03527
+    ounce = metric * .035274
     pound = int(ounce) // 16
     ounce = ounce - (pound * 16)
 
     if pound > 1:
-        stupid_part = '{} pounds {:.2f} ounces'.format(pound, ounce)
+        stupid_part = '{} pounds'.format(pound)
+        if ounce > 0.01:
+            stupid_part += ' {:.2f} ounces'.format(ounce)
     else:
         stupid_part = '{:.2f} oz'.format(ounce)
 

@@ -1,4 +1,4 @@
-#coding: utf8
+# coding=utf8
 """
 coretasks.py - Willie Routine Core tasks
 Copyright 2008-2011, Sean B. Palmer (inamidst.com) and Michael Yanovich
@@ -64,6 +64,14 @@ def startup(bot, trigger):
         bot.write((
             'OPER',
             bot.config.core.oper_name + ' ' + bot.config.oper_password
+        ))
+
+    #Use Authserv if authserv_password and authserv_account is set in config.
+    if (bot.config.core.authserv_password is not None
+            and bot.config.core.authserv_account is not None):
+        bot.write((
+            'AUTHSERV auth',
+            bot.config.core.authserv_account + ' ' + bot.config.authserv_password
         ))
 
     #Set bot modes per config, +B if no config option is defined
@@ -204,6 +212,8 @@ def track_modes(bot, trigger):
 
     modes = []
     for arg in line:
+        if len(arg) == 0:
+            continue
         if arg[0] in '+-':
             # There was a comment claiming IRC allows e.g. MODE +aB-c foo, but
             # I don't see it in any RFCs. Leaving in the extra parsing for now.
@@ -419,7 +429,12 @@ def auth_proceed(bot, trigger):
         # How did we get here? I am not good with computer.
         return
     # Is this right?
-    sasl_token = '\0'.join((bot.nick, bot.nick, bot.config.core.sasl_password))
+    if bot.config.core.sasl_username:
+        sasl_username = bot.config.core.sasl_username
+    else:
+        sasl_username = bot.nick
+    sasl_token = '\0'.join((sasl_username, sasl_username,
+                           bot.config.core.sasl_password))
     # Spec says we do a base 64 encode on the SASL stuff
     bot.write(('AUTHENTICATE', base64.b64encode(sasl_token)))
 
