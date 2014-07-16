@@ -9,7 +9,8 @@ def timestamp():
     lt = time.localtime(time.time())
     return "%02d.%02d.%04d %02d:%02d:%02d" % (lt[2], lt[1], lt[0], lt[3], lt[4], lt[5])
 
-
+#def users(channel):
+   
 
 @module.event('JOIN')
 @module.rule('.*')
@@ -37,7 +38,15 @@ def peak(bot, trigger):
 def peakusers(bot, trigger):
     f = open(dbfile, 'r')
     count = f.read()
-    bot.reply("The most meatbags I've seen were %s here, give or take a few superior beings like me." % count)
+    bot.reply("The most meatbags I've seen were XX  here, give or take a few superior beings like me.")
+
+@module.commands('peakdb')
+@module.example('.peakdb')
+def peakdb(bot, trigger):
+   t = bot.db.table('tevatrondb', 'peak', 'count, date', 'count')
+   #count = table.get(1,1);
+   bot.reply("The count is")
+
 
 #@module.commands('usercount')
 #@module.example('.usercount')
