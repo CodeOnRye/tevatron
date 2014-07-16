@@ -1,4 +1,4 @@
-#coding: utf8
+# coding=utf8
 """
 *Availability: 3+*
 ``tools`` contains a number of useful miscellaneous tools and shortcuts for use
@@ -474,6 +474,17 @@ def format_time(db=None, config=None, zone=None, nick=None, channel=None,
             time = utc.localize(time)
         zone = pytz.timezone(zone)
         return time.astimezone(zone).strftime(tformat)
+
+
+def get_hostmask_regex(mask):
+    """Return a compiled `re.RegexObject` for an IRC hostmask"""
+    result = ''
+    for char in mask:
+        if char == '*':
+            result += '.*'
+        else:
+            result += re.escape(char)
+    return re.compile(result, re.I)
 
 
 class WillieMemory(dict):
