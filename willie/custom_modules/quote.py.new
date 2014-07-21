@@ -1,0 +1,34 @@
+from willie import *
+import random
+import fileinput
+
+qdb = "/home/tevatron/.willie/modules/quote.db"
+temp = "/home/tevatron/.willie/modules/temp.db"
+
+@module.commands('addquote')
+@module.example('.addquote <beekar> I love peanutbutter and jelly.')
+def addquote(bot, trigger):
+        quote = trigger.group(2)
+        f = open(temp, 'a')
+        f.write("\n%s" % quote)
+        f.close()
+        bot.reply('Your quote will be added upon approval.')
+
+@module.commands('quote')
+@module.example('.quote')
+def quote(bot, trigger):
+        f = open(qdb, 'r')
+        line = random.choice(list(open(qdb)))
+        bot.reply(line)
+
+@module.commands('approvequote')
+@module.example('.approvequote') 
+def approvequote(bot, trigger):
+	if trigger.admin:
+	    with open(qdb, 'a') as fout:
+		for line in fileinput.input(temp):
+		    fout.write(line)
+	
+	    bot.reply('Quotes merged...')
+        elif not trigger.admin:
+            bot.reply('You lack the privileges, serf. Get back to your field.')
