@@ -38,17 +38,5 @@ def peak(bot, trigger):
 def peakusers(bot, trigger):
     f = open(dbfile, 'r')
     count = f.read()
-    bot.reply("The most meatbags I've seen were XX  here, give or take a few superior beings like me.")
+    bot.reply("The most meatbags I've seen were %s here, give or take a few superior beings like me." % count)
 
-@module.commands('peakdb')
-@module.example('.peakdb')
-def peakdb(bot, trigger):
-   t = bot.db.table('tevatrondb', 'peak', 'count, date', 'count')
-   #count = table.get(1,1);
-   bot.reply("The count is")
-
-
-#@module.commands('usercount')
-#@module.example('.usercount')
-#def usercount(bot, trigger):
-#    bot.reply(db.users())
