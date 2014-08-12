@@ -8,5 +8,5 @@ import willie
 @willie.module.commands('helloworld')
 
 def helloworld(bot, trigger):
-   bot.say('Hello, World!')
+   bot.say('You and your world can go get fucked')
 
