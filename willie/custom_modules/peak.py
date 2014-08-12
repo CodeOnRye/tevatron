@@ -3,7 +3,7 @@ from collections import Counter
 import re
 import os
 
-dbfile = os.path.dirname(os.path.realpath(__file__)) + '~/.willie/peak.db'
+dbfile = os.path.dirname(os.path.realpath(__file__)) + '../.willie/peak.db'
 
 def timestamp():
     lt = time.localtime(time.time())
