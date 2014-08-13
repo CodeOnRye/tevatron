@@ -1,7 +1,7 @@
 from willie import *
 import random
 
-qdb = "/home/tevatron/.willie/modules/quote.db"
+qdb = "/home/tevatron/.willie/quote.db"
 
 @module.commands('addquote')
 @module.example('.addquote <beekar> I love peanutbutter and jelly.')
@@ -15,7 +15,9 @@ def addquote(bot, trigger):
 @module.commands('quote')
 @module.example('.quote')
 def quote(bot, trigger):
+	search = trigger.group(2)
         f = open(qdb, 'r')
-        line = random.choice(list(open(qdb)))
-        bot.reply(line)
+	if search < 0:
+            line = random.choice(list(open(qdb)))
+            bot.reply(line)
 
