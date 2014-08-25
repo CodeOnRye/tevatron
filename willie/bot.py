@@ -280,6 +280,13 @@ class Willie(irc.Bot):
             """Compare Job objects according to attribute next_time."""
             return self.next_time - other.next_time
 
+        if py3:
+            def __lt__(self, other):
+                return self.next_time < other.next_time
+
+            def __gt__(self, other):
+                return self.next_time > other.next_time
+
         def __str__(self):
             """Return a string representation of the Job object.
 
@@ -451,7 +458,7 @@ class Willie(irc.Bot):
             def trim_docstring(doc):
                 """Clean up a docstring"""
                 if not doc:
-                    return ''
+                    return []
                 lines = doc.expandtabs().splitlines()
                 indent = sys.maxsize
                 for line in lines[1:]:
@@ -466,10 +473,9 @@ class Willie(irc.Bot):
                     trimmed.pop()
                 while trimmed and not trimmed[0]:
                     trimmed.pop(0)
-                return '\n'.join(trimmed)
+                return trimmed
             doc = trim_docstring(func.__doc__)
 
-            # At least for now, only account for the first command listed.
             if hasattr(func, 'commands') and func.commands[0]:
                 example = None
                 if hasattr(func, 'example'):
@@ -481,7 +487,8 @@ class Willie(irc.Bot):
                         example = func.example[0]["example"]
                     example = example.replace('$nickname', str(self.nick))
                 if doc or example:
-                    self.doc[func.commands[0]] = (doc, example)
+                    for command in func.commands:
+                        self.doc[command] = (doc, example)
             self.commands[priority].setdefault(regexp, []).append(func)
 
         for func in self.callables:

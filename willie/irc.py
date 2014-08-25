@@ -133,6 +133,10 @@ class Bot(asynchat.async_chat):
         """ Set to True when a server has accepted the client connection and
         messages can be sent and received. """
 
+        # Work around bot.connecting missing in Python older than 2.7.4
+        if not hasattr(self, "connecting"):
+            self.connecting = False
+
     def log_raw(self, line, prefix):
         """Log raw line to the raw log."""
         if not self.config.core.log_raw:
@@ -450,7 +454,7 @@ class Bot(asynchat.async_chat):
             encoded_text = text
         excess = ''
         if max_messages > 1 and len(encoded_text) > max_text_length:
-            last_space = encoded_text.rfind(' ', 0, max_text_length)
+            last_space = encoded_text.rfind(' '.encode('utf-8'), 0, max_text_length)
             if last_space == -1:
                 excess = encoded_text[max_text_length:]
                 encoded_text = encoded_text[:max_text_length]

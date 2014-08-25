@@ -13,12 +13,6 @@ from __future__ import unicode_literals
 
 import re
 import sys
-if sys.version_info.major < 3:
-    from htmlentitydefs import name2codepoint
-    import urlparse
-else:
-    from html.entities import name2codepoint
-    import urllib.parse as urlparse
 from willie import web, tools
 from willie.module import commands, rule, example
 
@@ -151,7 +145,7 @@ def process_urls(bot, trigger, urls):
         if not url.startswith(exclusion_char):
             # Magic stuff to account for international domain names
             try:
-                url = iri_to_uri(url)
+                url = willie.web.iri_to_uri(url)
             except:
                 pass
             # First, check that the URL we got doesn't match
@@ -207,22 +201,10 @@ def check_callbacks(bot, trigger, url, run=True):
 
 def find_title(url):
     """Return the title for the given URL."""
-    content, headers = web.get(url, return_headers=True, limit_bytes=max_bytes,
-                               dont_decode=True)
-    content_type = headers.get('Content-Type') or ''
-    encoding_match = re.match('.*?charset *= *(\S+)', content_type)
-    # If they gave us something else instead, try that
-    if encoding_match:
-        try:
-            content = content.decode(encoding_match.group(1))
-        except:
-            encoding_match = None
-    # They didn't tell us what they gave us, so go with UTF-8 or fail silently.
-    if not encoding_match:
-        try:
-            content = content.decode('utf-8')
-        except:
-            return
+    try:
+        content, headers = web.get(url, return_headers=True, limit_bytes=max_bytes)
+    except UnicodeDecodeError:
+        return # Fail silently when data can't be decoded
 
     # Some cleanup that I don't really grok, but was in the original, so
     # we'll keep it (with the compiled regexes made global) for now.
@@ -255,22 +237,6 @@ def get_hostname(url):
     if slash != -1:
         hostname = hostname[:slash]
     return hostname
-
-
-# Functions for international domain name magic
-
-
-def urlEncodeNonAscii(b):
-    return re.sub('[\x80-\xFF]', lambda c: '%%%02x' % ord(c.group(0)), b)
-
-
-def iri_to_uri(iri):
-    parts = urlparse.urlparse(iri)
-    return urlparse.urlunparse(
-        part.encode('idna') if parti == 1 else urlEncodeNonAscii(part.encode('utf-8'))
-        for parti, part in enumerate(parts)
-    )
-
 
 if __name__ == "__main__":
     from willie.test_tools import run_example_tests

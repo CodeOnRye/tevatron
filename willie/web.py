@@ -22,11 +22,14 @@ if sys.version_info.major < 3:
     import httplib
     from htmlentitydefs import name2codepoint
     from urlparse import urlparse
+    from urlparse import urlunparse
 else:
     import urllib.request as urllib2
     import http.client as httplib
     from html.entities import name2codepoint
     from urllib.parse import urlparse
+    from urllib.parse import urlunparse
+    unichr = chr
 import ssl
 import os.path
 import socket
@@ -58,12 +61,24 @@ def get(uri, timeout=20, headers=None, return_headers=False,
     u = get_urllib_object(uri, timeout, headers, verify_ssl)
     bytes = u.read(limit_bytes)
     u.close()
+    headers = dict(u.info())
     if not dont_decode:
-        bytes = bytes.decode('utf-8')
+        # Detect encoding automatically from HTTP headers
+        content_type = headers.get('Content-Type') or ''
+        encoding_match = re.match('.*?charset *= *(\S+)', content_type, re.IGNORECASE)
+        if encoding_match:
+            try:
+                bytes = bytes.decode(encoding_match.group(1))
+            except:
+                # attempt unicode on failure
+                encoding_match = None
+        if not encoding_match:
+            bytes = bytes.decode('utf-8', "ignore")
     if not return_headers:
         return bytes
     else:
-        return (bytes, u.info())
+        headers['_http_status'] = u.code
+        return (bytes, headers)
 
 
 # Get HTTP headers
@@ -163,6 +178,13 @@ def get_urllib_object(uri, timeout, headers=None, verify_ssl=True, data=None):
     """
 
     uri = quote_query(uri)
+
+    try:
+        # Check if we need to do IDN parsing
+        uri.encode('ascii')
+    except:
+        uri = iri_to_uri(uri)
+
     original_headers = {'Accept': '*/*', 'User-Agent': 'Mozilla/5.0 (Willie)'}
     if headers is not None:
         original_headers.update(headers)
@@ -199,6 +221,28 @@ def quote_query(string):
     parsed = urlparse(string)
     string = string.replace(parsed.query, quote(parsed.query, "/=&"), 1)
     return string
+
+
+# Functions for international domain name magic
+
+def urlencode_non_ascii(b):
+    regex = '[\x80-\xFF]'
+    if sys.version_info.major > 2:
+        regex = b'[\x80-\xFF]'
+    return re.sub(regex, lambda c: '%%%02x' % ord(c.group(0)), b)
+
+
+def iri_to_uri(iri):
+    parts = urlparse(iri)
+    parts_seq = (part.encode('idna') if parti == 1 else urlencode_non_ascii(part.encode('utf-8')) for parti, part in enumerate(parts))
+    if sys.version_info.major > 2:
+        parts_seq = list(parts_seq)
+
+    parsed = urlunparse(parts_seq)
+    if sys.version_info.major > 2:
+        return parsed.decode()
+    else:
+        return parsed
 
 
 if sys.version_info.major < 3:
