@@ -9,31 +9,31 @@ def notgoogle(bot, trigger):
     bot.reply('Does this look like Google to you?') 
 
 @module.rule('good morning everyone')
-def notgoogle(bot, trigger):
+def morning(bot, trigger):
     bot.say('Good morning, ' + trigger.nick)
 
 @module.rule('hi Tevatron')
-def notgoogle(bot, trigger):
+def hi(bot, trigger):
     bot.say('Heya, ' + trigger.nick)
 
 @module.rule('sup Tevatron')
-def notgoogle(bot, trigger):
+def sup(bot, trigger):
     bot.say('What\'it do, mang.')
 
 @module.rule('smoke weed')
-def notgoogle(bot, trigger):
+def weed(bot, trigger):
     bot.say('SMOKE WEEEEED ERRDAY.')
 
 @module.rule('Tevatron, what do you do?')
-def notgoogle(bot, trigger):
+def profession(bot, trigger):
     bot.say('ERRDAY I\'M SPINNIN')
 
 @module.rule('good morning, Tevatron')
-def notgoogle(bot, trigger):
+def morningtev(bot, trigger):
     bot.say('Good morning, ' + trigger.nick)
 
 @module.rule('good evening, Tevatron')
-def notgoogle(bot, trigger):
+def eveningtev(bot, trigger):
     bot.say('Good evening, ' + trigger.nick)
 
 
