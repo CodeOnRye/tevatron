@@ -1,0 +1,4 @@
+#!/bin/bash
+# 
+# This is a nasty job
+ssh tevatron@technothug.net 'tar zcvf tevatron.tgz tevatron && rm -rf tevatron && git clone ssh://github.com/reveille/tevatron.git && python ~/tevatron/tevatron-prime.py prime-db'
