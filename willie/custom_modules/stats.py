@@ -9,7 +9,7 @@ from willie import *
 import codecs
 
 
-logfile = "~/.willie/logs/raw.log"
+logfile = "/home/tevatron/.willie/logs/raw.log"
 epoch = "Jan 29  2014"
 
 @module.commands('stats')
