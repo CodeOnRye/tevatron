@@ -9,14 +9,14 @@ from willie import *
 import codecs
 
 
-logfile = "/home/tevatron/.willie/logs/raw.log"
-epoch = "blah blah blah"
+logfile = "~/.willie/logs/raw.log"
+epoch = "Jan 29  2014"
 
 @module.commands('stats')
 @module.example('.stats')
 def stats(bot, trigger):
         word = trigger.group(2)
-        bot.reply('Scouring the archives for your request.....')
+        bot.reply('Scouring the archives for your request, this may take a minute.....')
 	total = 0
 	with codecs.open(logfile, 'r', 'utf-8') as f:
 	    for line in f:
