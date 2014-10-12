@@ -22,7 +22,7 @@ def stats(bot, trigger):
 	    for line in f:
 	        finded = line.find(word)
 	        if finded != -1 and finded != 0:
-	            total += 1
+	            total += 1 
 	results = "The word %s has been mentioned %s times since %s." % (word, total, epoch)
 	bot.reply(results)
 	

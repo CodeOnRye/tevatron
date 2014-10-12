@@ -22,7 +22,7 @@ def sup(bot, trigger):
 
 @module.rule('smoke weed')
 def weed(bot, trigger):
-    bot.say('SMOKE WEEEEED ERRDAY.')
+    bot.say('errday.')
 
 @module.rule('Tevatron, what do you do?')
 def profession(bot, trigger):
