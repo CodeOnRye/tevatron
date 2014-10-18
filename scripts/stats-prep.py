@@ -7,7 +7,7 @@ outLOG = "/home/tevatron/.willie/logs/chat.log"
 pushChat = "grep PRIVMSG %s > %s" % (inLOG, outLOG)
 
 def GenChat():
-  subprocess.call(pushChat)
+  subprocess.call(pushChat, shell=True)
 
 GenChat()
 
