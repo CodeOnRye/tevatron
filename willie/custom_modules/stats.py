@@ -2,7 +2,7 @@
 #
 # TO DO:
 #
-# * Tevatron's own results keep artificially incrementing the word count.
+# * Smarter regex.
 #
 #
 from willie import *
