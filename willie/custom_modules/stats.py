@@ -19,8 +19,7 @@ def stats(bot, trigger):
         bot.reply('Scouring the archives for your request, this may take a minute.....')
 	with codecs.open(logfile, 'r', 'utf-8') as f:
 	    for line in f:
-	        if "times since" not in line:
-	            count = sum(len(re.findall( r'\b%s\b' % word, line)) for line in f if "times since" not in line)
+	        count = sum(len(re.findall( r'\b%s\b' % word, line)) for line in f if "times since" not in line)
 
 	results = "The word %s has been mentioned %s times since %s." % (word, count, epoch)
 	bot.reply(results)
