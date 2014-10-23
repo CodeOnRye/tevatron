@@ -1,8 +1,16 @@
 from willie import module
 
-@module.rule('hello?')
-def hi(bot, trigger):
-    bot.say('Hi, ' + trigger.nick)
+"""
+TODO:
+This should be upgraded into a DB system to allow for adding 1. Triggers
+2. Replies to certain trigger(s) 3. Ability for users to add a combo?
+
+"""
+#Removed due to user outrage
+
+#@module.rule('hey')
+#def hey(bot, trigger):
+#    bot.reply('hey ' + trigger.nick)
 
 @module.rule('does anyone know')
 def notgoogle(bot, trigger):
