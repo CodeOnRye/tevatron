@@ -33,8 +33,8 @@ def peak(bot, trigger):
         f.write(pop)
         f.close()
 
-@module.commands('peakusers')
-@module.example('.peakusers')
+@module.commands('peak')
+@module.example('.peak')
 def peakusers(bot, trigger):
     f = open(dbfile, 'r')
     count = f.read()

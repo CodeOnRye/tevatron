@@ -1,0 +1,5 @@
+#!/bin/bash
+#
+# For quick configuration drop this in your home directory.
+#
+tar zcvf tevatron.tgz tevatron && rm -rf tevatron && git clone http://github.com/reveille/tevatron && python /home/tevatron/tevatron/tevatron-prime.py
