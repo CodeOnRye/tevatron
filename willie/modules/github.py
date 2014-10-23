@@ -21,9 +21,11 @@ import os
 import re
 
 issueURL = (r'https?://(?:www\.)?github.com/'
-             '([A-z0-9\-]+/[A-z0-9\-]+)/'
-             '(?:issues|pull)/'
-             '([\d]+)')
+            '([A-z0-9\-]+/[A-z0-9\-]+)/'
+            '(?:issues|pull)/'
+            '([\d]+)')
+regex = re.compile(issueURL)
+
 
 def checkConfig(bot):
     if not bot.config.has_option('github', 'oauth_token') or not bot.config.has_option('github', 'repo'):
@@ -45,11 +47,16 @@ def configure(config):
         config.interactive_add('github', 'repo', 'Github repository', 'embolalia/willie')
     return chunk
 
+
 def setup(bot):
-    regex = re.compile(issueURL)
     if not bot.memory.contains('url_callbacks'):
         bot.memory['url_callbacks'] = tools.WillieMemory()
     bot.memory['url_callbacks'][regex] = issue_info
+
+
+def shutdown(bot):
+    del bot.memory['url_callbacks'][regex]
+
 
 @commands('makeissue', 'makebug')
 def issue(bot, trigger):
@@ -158,7 +165,7 @@ def findIssue(bot, trigger):
         else:
             return bot.reply('What are you searching for?')
     else:
-        URL = 'https://api.github.com/legacy/issues/search/%s/open/%s' % (gitAPI[1], trigger.group(2))
+        URL = 'https://api.github.com/legacy/issues/search/%s/open/%s' % (gitAPI[1], web.quote(trigger.group(2)))
 
     try:
         raw = web.get(URL)
@@ -189,6 +196,7 @@ def findIssue(bot, trigger):
     bot.reply('[#%s]\x02title:\x02 %s \x02|\x02 %s' % (data['number'], data['title'], body))
     bot.say(data['html_url'])
 
+
 @rule('.*%s.*' % issueURL)
 def issue_info(bot, trigger, match=None):
     match = match or trigger
@@ -209,4 +217,3 @@ def issue_info(bot, trigger, match=None):
         bot.say('The API says this is an invalid issue. Please report this if you know it\'s a correct link!')
         return NOLIMIT
     bot.say('[#%s]\x02title:\x02 %s \x02|\x02 %s' % (data['number'], data['title'], body))
-
